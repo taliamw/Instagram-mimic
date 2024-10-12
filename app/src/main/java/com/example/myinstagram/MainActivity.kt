@@ -1,8 +1,11 @@
+package com.example.myinstagram
+
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
@@ -20,7 +23,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.text.font.FontFamily
 import com.example.myinstagram.R
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,19 +60,30 @@ fun MyApp() {
                             .fillMaxWidth(),
                         horizontalArrangement = Arrangement.Center
                     ) {
-                        Text(text = "Instagram", fontSize = 24.sp)
+                        Image(
+                            painter = painterResource(id = R.drawable.insta_icon),
+                            contentDescription = "Instagram icon",
+                            modifier = Modifier.size(34.dp)
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = "Instagram", fontSize = 24.sp,
+                            fontFamily = FontFamily.Cursive
+                        )
                     }
 
                     Divider(modifier = Modifier.padding(6.dp))
 
-                    // Row of Circles (Your Original Component)
+                    // Row of Circles for stories
                     Row(
-                        modifier = Modifier.padding(all = 8.dp),
-                        horizontalArrangement = Arrangement.SpaceEvenly
+                        modifier = Modifier.padding(all = 12.dp),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        repeat(5) {
-                            CircularPhoto(imageResId = R.drawable.image1)
-                        }
+                        CircularPhoto(imageResId = R.drawable.image1)
+                        CircularPhoto(imageResId = R.drawable.image2)
+                        CircularPhoto(imageResId = R.drawable.image3)
+                        CircularPhoto(imageResId = R.drawable.image4)
+                        CircularPhoto(imageResId = R.drawable.image5)
                     }
 
                     Divider(modifier = Modifier.padding(6.dp))
@@ -79,17 +96,34 @@ fun MyApp() {
                     // Square photo section
                     SquareImage()
 
+                        Text(
+                            text = "This is my first post \uD83D\uDE02",
+                            modifier = Modifier
+                                .padding(8.dp),
+                            fontSize = 16.sp
+                        )
+
                     // Like button
                     LikeButtonRow()
 
                     Divider(modifier = Modifier.padding(1.dp))
 
                     // Another Username and Photo Section
-                    UserProfileSection("natalia_mw", R.drawable.image1)
+                    UserProfileSection("taliadraws", R.drawable.image3)
 
                     Divider(modifier = Modifier.padding(1.dp))
 
-                    SquareImage()
+                    SquareImage2()
+
+                    LikeButtonRow()
+
+                    // Another Username and Photo Section
+                    UserProfileSection("daily_memes", R.drawable.image5)
+
+                    Divider(modifier = Modifier.padding(1.dp))
+
+                    SquareImage3()
+
                     LikeButtonRow()
                 }
 
@@ -106,15 +140,28 @@ fun MyApp() {
 
 @Composable
 fun CircularPhoto(imageResId: Int) {
-    Image(
-        painter = painterResource(id = imageResId),
-        contentDescription = "Circular Photo",
-        contentScale = ContentScale.Crop,
+    Box(
         modifier = Modifier
-            .size(50.dp)
-            .clip(CircleShape) // Clip to a circle shape
+            .size(81.dp)
+            .clip(CircleShape)
+            .background(
+                brush = Brush.linearGradient(
+                    colors = listOf(Color.Magenta, Color.Cyan)
+                ),
+                shape = CircleShape
+            )
             .padding(4.dp)
-    )
+    ){
+        Image(
+            painter = painterResource(id = imageResId),
+            contentDescription = "Circular Photo",
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .size(80.dp)
+                .clip(CircleShape)
+
+        )
+    }
 }
 
 @Composable
@@ -126,14 +173,14 @@ fun UserProfileSection(username: String, imageResId: Int) {
         verticalAlignment = Alignment.CenterVertically
     ) {
         // Circle profile picture
-        Image(
-            painter = painterResource(id = imageResId),
-            contentDescription = "Profile Picture",
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .size(30.dp)
-                .clip(CircleShape) // Clip the image to be a circle
-        )
+            Image(
+                painter = painterResource(id = imageResId),
+                contentDescription = "Profile Picture",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .size(30.dp)
+                    .clip(CircleShape) // Clip the image to be a circle
+            )
 
         Spacer(modifier = Modifier.width(8.dp)) // Add some space between the image and the text
         Text(
@@ -146,7 +193,32 @@ fun UserProfileSection(username: String, imageResId: Int) {
 @Composable
 fun SquareImage(modifier: Modifier = Modifier) {
     Image(
-        painter = painterResource(id = R.drawable.image1), // Replace with your image resource
+        painter = painterResource(id = R.drawable.image6),
+        contentDescription = "Photo",
+        contentScale = ContentScale.Crop, // Ensures the image crops to the correct aspect ratio
+        modifier = modifier
+            .fillMaxWidth()
+            .aspectRatio(1f) // Ensures the image is square
+            .padding(0.dp)
+    )
+}
+@Composable
+fun SquareImage2(modifier: Modifier = Modifier) {
+    Image(
+        painter = painterResource(id = R.drawable.image1),
+        contentDescription = "Photo",
+        contentScale = ContentScale.Crop, // Ensures the image crops to the correct aspect ratio
+        modifier = modifier
+            .fillMaxWidth()
+            .aspectRatio(1f) // Ensures the image is square
+            .padding(0.dp)
+    )
+}
+
+@Composable
+fun SquareImage3(modifier: Modifier = Modifier) {
+    Image(
+        painter = painterResource(id = R.drawable.image4),
         contentDescription = "Photo",
         contentScale = ContentScale.Crop, // Ensures the image crops to the correct aspect ratio
         modifier = modifier
@@ -171,28 +243,25 @@ fun LikeButtonRow(
         verticalAlignment = Alignment.CenterVertically
     ) {
         IconButton(onClick = onLikeClick) {
-            Icon(
-                painter = painterResource(id = R.drawable.image1), // Your like icon
+            Image(
+                painter = painterResource(id = R.drawable.heart_icon),
                 contentDescription = "Like",
-                tint = Color.Gray,
-                modifier = Modifier.size(24.dp)
+                modifier = Modifier.size(40.dp)
             )
         }
 
         IconButton(onClick = onCommentClick) {
-            Icon(
-                painter = painterResource(id = R.drawable.image1), // Your comment icon
+            Image(
+                painter = painterResource(id = R.drawable.comment_icon),
                 contentDescription = "Comment",
-                tint = Color.Gray,
                 modifier = Modifier.size(24.dp)
             )
         }
 
         IconButton(onClick = onShareClick) {
-            Icon(
-                painter = painterResource(id = R.drawable.image1), // Your share icon
+            Image(
+                painter = painterResource(id = R.drawable.share_icon),
                 contentDescription = "Share",
-                tint = Color.Gray,
                 modifier = Modifier.size(24.dp)
             )
         }
@@ -203,12 +272,30 @@ fun LikeButtonRow(
 fun HorizontalMenu(modifier: Modifier = Modifier) {
     Row(
         horizontalArrangement = Arrangement.SpaceEvenly,
+        verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
-            .padding(16.dp)
-            .background(Color.LightGray) // Optional styling
+            .padding(1.dp)
+            .background(Color.White)
+            .size(50.dp)
     ) {
-        Text("Home", modifier = Modifier.clickable { })
-        Text("Search", modifier = Modifier.clickable { })
-        Text("Profile", modifier = Modifier.clickable { })
+        Image(
+            painter = painterResource(id = R.drawable.home_icon),
+            contentDescription = "Home icon"
+        )
+        Image(
+            painter = painterResource(id = R.drawable.plus_icon),
+            contentDescription = "Plus icon",
+            Modifier.size(30.dp)
+        )
+        Image(
+            painter = painterResource(id = R.drawable.search_icon),
+            contentDescription = "Search icon",
+            modifier = Modifier
+                .size(35.dp)
+        )
+        Image(
+            painter = painterResource(id = R.drawable.profile_icon),
+            contentDescription = "Profile icon"
+        )
     }
 }
